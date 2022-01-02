@@ -6,7 +6,7 @@ class Board(pygame.Surface):
         super().__init__((width, height))
         self.fill((200, 200, 200)) # background color
         self.color = color
-        tile_positions = []
+        self.tile_positions = []
         left = 0
         top = 0
         direction = "right"
@@ -19,7 +19,7 @@ class Board(pygame.Surface):
             tile_pos.x = left
             tile_pos.y = top
             self.blit(tile, tile_pos)
-            tile_positions.append(tile_pos)
+            self.tile_positions.append(tile_pos)
             # change position for next tile
             if direction == "right":
                 left += tile_width
@@ -41,3 +41,6 @@ class Board(pygame.Surface):
         else:
             tile.fill((0, 0, 0))
         return tile
+
+    def get_tile_positions(self):
+        return self.tile_positions
