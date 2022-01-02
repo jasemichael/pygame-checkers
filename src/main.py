@@ -1,15 +1,16 @@
 import pygame
 from pygame.locals import *
 from Menu import Menu
+from Board import Board
 
 def main():
     pygame.init()
-    SCREEN_WIDTH = 500
-    SCREEN_HEIGHT = 500
+    SCREEN_WIDTH = 800
+    SCREEN_HEIGHT = 800
+    BACKGROUND_COLOR = (240, 240, 240)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption('Pygame Checkers')
     background = pygame.Surface(screen.get_size())
-    background = background.convert()
     background.fill((255, 255, 255))
     # Menu
     menu = Menu(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -26,12 +27,21 @@ def main():
                 return
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos
-                if menu.get_ai_button_pos().collidepoint(mouse_pos):
-                    menu.play_ai_game()
-                elif menu.get_host_button_pos().collidepoint(mouse_pos):
-                    menu.host_game()
-                elif menu.get_joiner_button_pos().collidepoint(mouse_pos):
-                    menu.join_game()
+                if menu: # Menu button selection
+                    if menu.get_ai_button_pos().collidepoint(mouse_pos):
+                        background.fill(BACKGROUND_COLOR)
+                        board = Board(SCREEN_WIDTH*.95, SCREEN_HEIGHT*.95, (255, 0, 0))
+                        board_pos = board.get_rect()
+                        board_pos.centerx = background.get_rect().centerx
+                        board_pos.centery = background.get_rect().centery
+                        background.blit(board, board_pos)
+                        menu = None
+                    elif menu.get_host_button_pos().collidepoint(mouse_pos):
+                        background.fill(BACKGROUND_COLOR)
+                        menu = None
+                    elif menu.get_joiner_button_pos().collidepoint(mouse_pos):
+                        background.fill(BACKGROUND_COLOR)
+                        menu = None
         screen.blit(background, (0, 0))
         pygame.display.flip()
 
