@@ -10,7 +10,7 @@ class KingChecker(Checker):
         start_y = self.get_rect().centery - width/8
         crown_verts = [
             (start_x, start_y),
-            (start_x, start_y + height*.375),
+            (start_x, start_y - height*.375),
             (start_x + width*.125, start_y - height*.25),
             (start_x + width*.25, start_y - height*.375),
             (start_x + width*.375, start_y - height*.25),
