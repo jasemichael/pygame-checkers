@@ -3,6 +3,7 @@ from pygame.locals import *
 from Menu import Menu
 from Board import Board
 from Checker import Checker
+from KingChecker import KingChecker
 
 def main():
     pygame.init()
@@ -35,17 +36,28 @@ def main():
                         board_pos = board.get_rect()
                         board_pos.centerx = background.get_rect().centerx
                         board_pos.centery = background.get_rect().centery
+                        # for tile in board.get_tile_positions():
+                        #     checker = Checker(
+                        #         tile.width, 
+                        #         tile.height, 
+                        #         (125, 23, 125),
+                        #         tile.width/2-5
+                        #     )
+                        #     checker_pos = checker.get_rect()
+                        #     checker_pos.centerx = tile.centerx
+                        #     checker_pos.centery = tile.centery
+                        #     board.blit(checker, checker_pos)
                         for tile in board.get_tile_positions():
-                            checker = Checker(
+                            kingChecker = KingChecker(
                                 tile.width, 
                                 tile.height, 
                                 (125, 23, 125),
                                 tile.width/2-5
                             )
-                            checker_pos = checker.get_rect()
+                            checker_pos = kingChecker.get_rect()
                             checker_pos.centerx = tile.centerx
                             checker_pos.centery = tile.centery
-                            board.blit(checker, checker_pos)
+                            board.blit(kingChecker, checker_pos)
                         background.blit(board, board_pos)
                         menu = None
                     elif menu.get_host_button_pos().collidepoint(mouse_pos):
