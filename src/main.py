@@ -36,6 +36,8 @@ def main():
                         board_pos = board.get_rect()
                         board_pos.centerx = background.get_rect().centerx
                         board_pos.centery = background.get_rect().centery
+
+                        '''Checking to see if the KingChecker draws correctly'''
                         # for tile in board.get_tile_positions():
                         #     checker = Checker(
                         #         tile.width, 
@@ -58,6 +60,7 @@ def main():
                             checker_pos.centerx = tile.centerx
                             checker_pos.centery = tile.centery
                             board.blit(kingChecker, checker_pos)
+
                         background.blit(board, board_pos)
                         menu = None
                     elif menu.get_host_button_pos().collidepoint(mouse_pos):
