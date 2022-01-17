@@ -13,6 +13,7 @@ class Controller:
         pygame.display.set_caption('Pygame Checkers')
         self.background = pygame.Surface(self.window.get_size())
         self.background_color = (240, 240, 240)
+        self.screen = "menu"
 
     def render(self, surface, position):
         self.background.fill(self.background_color)
@@ -32,7 +33,7 @@ class Controller:
                     return
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = event.pos
-                    if menu: # Menu button selection
+                    if self.screen == "menu": # Menu button selection
                         if menu.get_ai_button_pos().collidepoint(mouse_pos):
                             board = Board(self.get_window_width()*.95, self.get_window_height()*.95, (255, 0, 0))
                             board_pos = board.get_rect()
@@ -50,13 +51,13 @@ class Controller:
                                 checker_pos.centery = tile.centery
                                 board.blit(kingChecker, checker_pos)
                             self.render(board, board_pos)
-                            menu = None
+                            self.screen = "game"
                         elif menu.get_host_button_pos().collidepoint(mouse_pos):
                             self.background.fill(self.background_color)
-                            menu = None
+                            self.screen = "game"
                         elif menu.get_joiner_button_pos().collidepoint(mouse_pos):
                             self.background.fill(self.background_color)
-                            menu = None
+                            self.screen = "game"
             self.window.blit(self.background, (0, 0))
             pygame.display.flip()
 
