@@ -1,5 +1,5 @@
 import pygame
-from Checker import Checker
+from views.Checker import Checker
 
 class KingChecker(Checker):
 
