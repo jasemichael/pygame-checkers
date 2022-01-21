@@ -65,13 +65,12 @@ class Game:
             if not self.is_checker(new_pos):
                 checker = self.get_tile((selected_checker_row, selected_checker_column))
                 if self.is_valid_move(new_pos):
-                    if self.should_king(new_pos[0]):
+                    if self.should_king(checker, new_pos[0]):
                         checker["is_king"] = True
                     checker["is_selected"] = False
                     self.set_tile(None, (selected_checker_row, selected_checker_column))
                     self.set_tile(checker, (new_pos[0], new_pos[1]))
                     self.set_selected_checker(None)
-                    self.switch_turns()
                 return False
             return False
         return False
@@ -86,6 +85,7 @@ class Game:
             return False
         elif checker["is_king"]: # king movement
             if (selected_checker_row - new_pos[0]) == 1 and abs(selected_checker_column - new_pos[1]) == 1 or (new_pos[0] - selected_checker_row) == 1 and abs(selected_checker_column - new_pos[1]):
+                self.switch_turns()
                 return True
             elif (selected_checker_row - new_pos[0]) == 2 and (selected_checker_column - new_pos[1]) == 2:
                 jumped_checker = (selected_checker_row-1, selected_checker_column-1)
@@ -113,6 +113,7 @@ class Game:
                         return True
         elif checker["player"] == 1: # player one movement
             if (selected_checker_row - new_pos[0]) == 1 and abs(selected_checker_column - new_pos[1]) == 1:
+                self.switch_turns()
                 return True
             elif (selected_checker_row - new_pos[0]) == 2 and (selected_checker_column - new_pos[1]) == 2:
                 jumped_checker = (selected_checker_row-1, selected_checker_column-1)
@@ -129,6 +130,7 @@ class Game:
             return False
         elif checker["player"] == 2: # player 2 movement
             if (new_pos[0] - selected_checker_row) == 1 and abs(selected_checker_column - new_pos[1]) == 1:
+                self.switch_turns()
                 return True
             elif (new_pos[0] - selected_checker_row) == 2 and (selected_checker_column - new_pos[1]) == 2:
                 jumped_checker = (selected_checker_row+1, selected_checker_column-1)
@@ -147,7 +149,7 @@ class Game:
     def is_checker(self, pos):
         return True if self.get_tile(pos) != None and self.get_tile(pos) != False else False
 
-    def should_king(self, row):
+    def should_king(self, checker, row):
         checker = self.get_tile(self.get_selected_checker())
         if checker["is_king"] == False:
             if self.current_player == 1:
