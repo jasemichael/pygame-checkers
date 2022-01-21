@@ -1,7 +1,7 @@
 import pygame
+from views.GameView import GameView
 from views.Menu import Menu
-from views.Board import Board
-from views.KingChecker import KingChecker
+from Game import Game
 from pygame.locals import *
 
 class Controller:
@@ -33,33 +33,48 @@ class Controller:
                     return
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = event.pos
-                    if self.screen == "menu": # Menu button selection
-                        if menu.get_ai_button_pos().collidepoint(mouse_pos):
-                            board = Board(self.get_window_width()*.95, self.get_window_height()*.95, (255, 0, 0))
-                            board_pos = board.get_rect()
-                            board_pos.centerx = self.background.get_rect().centerx
-                            board_pos.centery = self.background.get_rect().centery
-                            for tile in board.get_tile_positions():
-                                kingChecker = KingChecker(
-                                    tile.width, 
-                                    tile.height, 
-                                    (125, 23, 125),
-                                    tile.width/2-5
-                                )
-                                checker_pos = kingChecker.get_rect()
-                                checker_pos.centerx = tile.centerx
-                                checker_pos.centery = tile.centery
-                                board.blit(kingChecker, checker_pos)
-                            self.render(board, board_pos)
+                    if self.screen == "menu": # Menu screen
+                        if menu.get_ai_button_pos().collidepoint(mouse_pos): # selected AI button
+                            self.game = Game()
+                            self.update()
                             self.screen = "game"
-                        elif menu.get_host_button_pos().collidepoint(mouse_pos):
+                        elif menu.get_host_button_pos().collidepoint(mouse_pos): # selected host button
                             self.background.fill(self.background_color)
                             self.screen = "game"
-                        elif menu.get_joiner_button_pos().collidepoint(mouse_pos):
+                        elif menu.get_joiner_button_pos().collidepoint(mouse_pos): # selected join button
                             self.background.fill(self.background_color)
                             self.screen = "game"
+                    elif self.screen == "game":
+                        for row in range(len(self.game_view.get_tile_positions())):
+                            for column in range(len(self.game_view.get_tile_positions()[row])):
+                                tile = self.game_view.get_tile_positions()[row][column]
+                                if tile.collidepoint(mouse_pos):
+                                    selected_checker = self.game.get_selected_checker()
+                                    pos = (row, column)
+                                    is_checker = self.game.is_checker(pos)
+                                    tile = self.game.get_tile(pos)
+                                    if not selected_checker:
+                                        self.game.select_checker(pos)
+                                    elif selected_checker and is_checker:
+                                        self.game.select_checker(pos)
+                                    elif selected_checker and not self.game.is_checker(pos):
+                                        self.game.move_checker(pos)
+                                    break
+            if self.screen == "game":
+                self.update()
             self.window.blit(self.background, (0, 0))
             pygame.display.flip()
+
+    def update(self):
+        self.game_view = GameView(
+            self.get_window_width(), 
+            self.get_window_height(), 
+            self.game
+        )
+        self.game_view_pos = self.game_view.get_rect()
+        self.game_view_pos.centerx = self.background.get_rect().centerx
+        self.game_view_pos.centery = self.background.get_rect().centery
+        self.render(self.game_view, self.game_view_pos)
 
     def load_config(self):
         # Load user config from json file
